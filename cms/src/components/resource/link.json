@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_resource_links",
+  "info": {
+    "displayName": "Link",
+    "icon": "link",
+    "description": "One dark pill on the page. Attach a file to serve a download, or set a URL to link out."
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "regex": "^(https?://|/).*"
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "files"]
+    }
+  }
+}
