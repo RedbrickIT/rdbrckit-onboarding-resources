@@ -1,0 +1,28 @@
+.group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  background: var(--neutral-900);
+  transition: opacity 0.15s ease;
+}
+
+.icon:hover {
+  opacity: 0.85;
+}
+
+/* The glyphs are not all square — LinkedIn is 16 x 15.635 in the source
+   vector. Size each <img> from its own intrinsic width/height attributes
+   rather than forcing a single 16x16 rule across all five. */
+.icon img {
+  width: auto;
+  height: auto;
+}

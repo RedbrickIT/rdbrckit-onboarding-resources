@@ -1,0 +1,105 @@
+/*
+ * Global styles + design tokens.
+ *
+ * Token values come straight from the Figma design system (Redbrick IT
+ * Projects file). Names in the comments are the Figma variable names so the
+ * two stay traceable to each other.
+ */
+
+:root {
+  /* ---- Colour ------------------------------------------------------- */
+  --neutral-0: #ffffff; /* Neutral/0 */
+  --neutral-100: #eff1f5; /* Neutral/100 — divider lines */
+  --neutral-600: #777984; /* Neutral/600 — muted / italic note text */
+  --neutral-900: #21242e; /* Neutral/900 — primary text, dark buttons */
+  --green-200: #aec6af; /* Green/200 — hero background */
+  --yellow-50: #f4f3f0; /* Yellow/50 — resource section background */
+  --brick-200: #d1a58c; /* Brick/200 — header button, pressed-state ring */
+
+  /* ---- Effects ------------------------------------------------------ */
+  --shadow-sm: 0px 4px 16px 0px rgba(0, 0, 0, 0.05); /* Drop Shadow/Small */
+
+  /* ---- Layout ------------------------------------------------------- */
+  --content-max: 1440px;
+  --page-gutter: 64px;
+  --header-height: 80px;
+
+  /* A resource button is a fixed 304px wide with a 32px gutter, which lays
+     out as exactly four per row inside the 1312px content box. The grid below
+     is built from these two numbers rather than a hard-coded column count. */
+  --button-width: 304px;
+  --grid-gap: 32px;
+
+  --radius-pill: 24px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    var(--font-sans),
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  color: var(--neutral-900);
+  background: var(--neutral-0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* Shared layout helper: centres content and applies the page gutters. */
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --page-gutter: 24px;
+  }
+}
+
+/* Respect a reduced-motion preference across every animated component. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

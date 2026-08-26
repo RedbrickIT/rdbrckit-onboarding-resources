@@ -1,0 +1,226 @@
+/* Easing shared by the header animations: an "easy-ease" quart curve. */
+.header {
+  --ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --menu-dur: 0.45s;
+
+  position: sticky;
+  top: 0;
+  z-index: 70; /* stays above the full-screen menu so the X is tappable */
+  background: var(--neutral-0);
+  height: var(--header-height);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.hidden {
+  transform: translateY(-100%);
+}
+
+.inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 16px;
+  width: auto;
+}
+
+/* ---- Desktop links --------------------------------------------------- */
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 550; /* Lead/Small */
+  line-height: 24px;
+  color: var(--neutral-900);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Plain-text nav items gain an outline ring on hover. Figma draws it as an
+   inside stroke, so use an inset shadow rather than a border — a real border
+   would add 4px to the pill and shuffle the nav on every hover. */
+.link:hover {
+  box-shadow: inset 0 0 0 2px var(--neutral-900);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  border-radius: 18px;
+  background: var(--brick-200);
+  color: var(--neutral-900);
+  font-size: 16px;
+  font-weight: 550;
+  line-height: 24px;
+  cursor: not-allowed;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Brick/200 buttons invert to an outline on hover, then fill with Brick/300
+   while pressed — the same three-state pattern used on the marketplace site. */
+.button:hover {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--brick-200);
+  color: var(--brick-200);
+}
+
+.button:active {
+  background: #ca8d73; /* Brick/300 */
+  box-shadow: inset 0 0 0 2px #f4f0ee; /* Brick/50 */
+  color: var(--neutral-900);
+}
+
+/* ---- Hamburger / X toggle (mobile) ----------------------------------- */
+
+.toggle {
+  display: none;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.bar {
+  position: absolute;
+  left: 8px;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--neutral-900);
+  transition:
+    transform var(--menu-dur) var(--ease),
+    opacity 0.25s var(--ease);
+}
+
+.bar:nth-child(1) {
+  top: 12px;
+}
+.bar:nth-child(2) {
+  top: 19px;
+}
+.bar:nth-child(3) {
+  top: 26px;
+}
+
+.toggleOpen .bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.toggleOpen .bar:nth-child(2) {
+  opacity: 0;
+}
+.toggleOpen .bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ---- Full-screen mobile menu ----------------------------------------- */
+
+.menu {
+  --ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --menu-dur: 0.45s;
+
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Symmetric padding keeps the links centred in the middle of the screen. */
+  padding: 24px;
+  background: var(--neutral-0);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.15);
+  transform-origin: center;
+  transition:
+    opacity var(--menu-dur) var(--ease),
+    transform var(--menu-dur) var(--ease),
+    visibility 0s linear var(--menu-dur);
+}
+
+.menuOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transition:
+    opacity var(--menu-dur) var(--ease),
+    transform var(--menu-dur) var(--ease),
+    visibility 0s;
+}
+
+.menuLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+}
+
+.menuLink {
+  font-size: 24px;
+  font-weight: 550;
+  line-height: 1.2;
+  color: var(--neutral-900);
+}
+
+.menuButton {
+  padding: 12px 32px;
+  border-radius: 32px;
+  background: var(--brick-200);
+  color: var(--neutral-900);
+  font-size: 24px;
+  font-weight: 550;
+  line-height: 1.2;
+  cursor: not-allowed;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    color 0.3s ease;
+}
+
+.menuButton:hover {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--brick-200);
+  color: var(--brick-200);
+}
+
+.menuButton:active {
+  background: #ca8d73;
+  box-shadow: inset 0 0 0 2px #f4f0ee;
+  color: var(--neutral-900);
+}
+
+@media (max-width: 768px) {
+  .links {
+    display: none;
+  }
+  .toggle {
+    display: block;
+  }
+}

@@ -1,0 +1,57 @@
+.footer {
+  background: var(--neutral-0);
+  border-top: 2px solid var(--neutral-100); /* Divider Line */
+  padding-block: 40px;
+}
+
+.inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 56px;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 304px;
+}
+
+.logo {
+  height: 19.147px;
+  width: 182.6px;
+  align-self: flex-start;
+  flex: 0 0 auto;
+}
+
+.acknowledgment {
+  margin: 0;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--neutral-900);
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 196px;
+}
+
+.followLabel {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.1em; /* All Caps/14 */
+  text-transform: uppercase;
+  color: var(--neutral-900);
+}
+
+@media (max-width: 640px) {
+  .inner {
+    flex-direction: column;
+    gap: 32px;
+  }
+}

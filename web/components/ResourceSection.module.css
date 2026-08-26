@@ -1,0 +1,89 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  background: var(--yellow-50);
+  padding-block: 48px;
+  overflow: clip;
+}
+
+/* ---- Section header --------------------------------------------------- */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+}
+
+.title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 40px; /* Heading/H4 */
+  color: var(--neutral-900);
+  white-space: nowrap;
+}
+
+/* 2px white rule filling the rest of the header row. */
+.rule {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 2px;
+  background: var(--neutral-0);
+}
+
+/* ---- Groups ----------------------------------------------------------- */
+
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.note {
+  margin: 0;
+  font-style: italic;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px; /* Body/Medium */
+  color: var(--neutral-600);
+  width: 100%;
+}
+
+.groupLabel {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.1em; /* All Caps/16 */
+  text-transform: uppercase;
+  color: var(--neutral-900);
+  width: 100%;
+}
+
+/* Buttons are a fixed 304px with a 32px gutter, which packs exactly four to a
+   row inside the 1312px content box — the two-row wrap in the design falls out
+   of the track sizing rather than being hard-coded. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--button-width));
+  justify-content: start;
+  gap: var(--grid-gap);
+  width: 100%;
+}
+
+@media (max-width: 400px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 26px;
+    line-height: 34px;
+  }
+}

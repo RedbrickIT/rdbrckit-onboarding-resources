@@ -1,19 +1,27 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Patterns are intentionally unanchored so they apply inside web/ and cms/ too.
 
 # dependencies
-/node_modules
-/.pnp
+node_modules/
+.pnp
 .pnp.js
 
 # testing
-/coverage
+coverage/
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build/
+dist/
+
+# strapi
+.strapi/
+.cache/
+cms/public/uploads/*
+!cms/public/uploads/.gitkeep
 
 # misc
 .DS_Store
@@ -25,8 +33,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
 .env
+.env.local
+.env.*.local
 
 # vercel
 .vercel
