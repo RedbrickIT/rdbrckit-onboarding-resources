@@ -15,7 +15,7 @@
     "format:check": "prettier --check .",
     "payload": "payload",
     "payload:types": "payload generate:types",
-    "payload:importmap": "payload generate:importmap",
+    "payload:importmap": "BLOB_READ_WRITE_TOKEN=\"${BLOB_READ_WRITE_TOKEN:-vercel_blob_rw_placeholder_placeholder}\" payload generate:importmap",
     "payload:migrate": "payload migrate",
     "payload:migrate:safe": "PAYLOAD_MIGRATING=true payload run ./scripts/migrate.ts",
     "payload:migrate:status": "payload migrate:status",

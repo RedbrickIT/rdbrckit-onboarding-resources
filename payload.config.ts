@@ -90,6 +90,15 @@ export default buildConfig({
         vercelBlobStorage({
           collections: { [Media.slug]: true },
           token: blobToken,
+          // Upload straight from the browser to Blob instead of routing the
+          // bytes through a serverless function.
+          //
+          // Vercel caps a function's request body at 4.5MB. A desktop
+          // wallpaper clears that easily, and the admin surfaces the rejection
+          // as an unexplained "Something went wrong". Client uploads ask the
+          // server only for a short-lived token, so file size stops being a
+          // function concern.
+          clientUploads: true,
         }),
       ]
     : [],
