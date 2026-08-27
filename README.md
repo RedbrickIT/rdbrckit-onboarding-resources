@@ -63,7 +63,7 @@ copy rather than rendering blank.
 
 ## What I need you to do
 
-Steps 1–4 get it live. Everything is one Vercel project.
+Steps 1–3 get it live. Everything is one Vercel project.
 
 ### 1. Create the Neon database
 
@@ -76,27 +76,16 @@ pooler is what keeps that from exhausting Neon's connection limit.
 postgresql://USER:PASSWORD@ep-xxxx-pooler.us-west-2.aws.neon.tech/neondb?sslmode=require
 ```
 
-### 2. Create a Blob store for uploads
-
-In Vercel: **Storage → Create → Blob**. Creating it sets
-`BLOB_READ_WRITE_TOKEN` on the project automatically.
-
-This isn't optional. Vercel's filesystem is read-only apart from an ephemeral
-`/tmp`, so without Blob the wallpapers and icons have nowhere to go. Payload
-only activates the Blob plugin when that token is present, which is why local
-development still writes to disk with no setup.
-
-### 3. Set the environment variables
+### 2. Set the environment variables
 
 On the Vercel project:
 
 ```bash
 DATABASE_URI=<the Neon pooled connection string from step 1>
 PAYLOAD_SECRET=<openssl rand -base64 32>
-# BLOB_READ_WRITE_TOKEN is set for you by step 2
 ```
 
-### 4. Deploy
+### 3. Deploy
 
 Point Vercel at this repo. The app is at the repository root, so leave the
 root directory setting empty.
@@ -129,13 +118,15 @@ history, and the initial migration creates all twelve tables.
 
 Then open `https://<your-site>/admin` and create the first admin user.
 
-### 5. Fill in the content
+### 4. Fill in the content
 
 The seeded buttons have labels but no destinations, and render as inert pills
-until you give them one. In **Resource Sections**, each link takes either:
+until you give them one. In **Resource Sections**, give each link a **URL** and
+it becomes a working button, opened in a new tab.
 
-- **File** — upload the wallpaper or icon; the button becomes a download, or
-- **URL** — for the signature generators, which link out.
+There is no file upload. Wallpapers and icons are linked from wherever they
+already live — Drive, Dropbox, a CDN — rather than stored here. See
+[Known constraints](#known-constraints) for why.
 
 Publishing repaints the page immediately — an `afterChange` hook calls
 `revalidatePath` directly. No webhook to configure.
@@ -163,7 +154,6 @@ Resource Section
     ├── note   optional                   -> italic text above the label
     └── links[]
         ├── label  e.g. "Animoto"         -> the button text
-        ├── file   optional upload        -> downloads; wins over url
         └── url    optional               -> opens in a new tab
 ```
 
@@ -218,6 +208,27 @@ runs.
 Type correctness is unaffected — `npm run typecheck` (tsc 7) and the type check
 `next build` runs both cover it. When typescript-eslint ships TS 7 support, that
 file can go back to a two-line `eslint-config-next` extend.
+
+**No file uploads.** Links point at files hosted elsewhere rather than files
+stored here, and the `media` collection was removed in
+`20260827_212420_remove_media_uploads`.
+
+Uploads were built on Vercel Blob first and did not work. The store attached to
+this project is Blob's newer generation — it provisions `BLOB_STORE_ID` and
+`BLOB_WEBHOOK_PUBLIC_KEY`, which classic Blob never does — and
+`@payloadcms/storage-vercel-blob` 3.88.0 only speaks the original client-token
+flow (`handleUpload`/`upload`), never the presigned one
+(`handleUploadPresigned`/`uploadPresigned`). Browser uploads got a 400 on every
+`PUT /?pathname=...` and the SDK's retries made it look like a hang. Routing
+through the server instead failed too, and 3.88.0 is the latest release, so
+there was no version to upgrade to.
+
+Storing files as base64 in Postgres was considered and rejected: it inflates
+every file by a third, keeps Vercel's 4.5MB function body cap either way, and
+turns each download into a function invocation that buffers the whole file. If
+uploads are ever wanted again, an S3-compatible bucket
+(`@payloadcms/storage-s3`, pointed at R2 or S3) is the path — that adapter does
+not depend on any of the above.
 
 **Why not `@payloadcms/db-vercel-postgres`.** It's built on `@vercel/postgres`,
 which is deprecated: Vercel Postgres migrated to Neon as a native integration,
