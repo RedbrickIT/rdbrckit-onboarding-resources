@@ -2,10 +2,8 @@
 export type ResourceLink = {
   id: string;
   label: string;
-  /** External destination, used when no file is attached. */
+  /** External destination. Null renders the button as an inert pill. */
   url: string | null;
-  /** Absolute URL of a file uploaded to Strapi. Takes precedence over `url`. */
-  fileUrl: string | null;
 };
 
 /** A labelled row (or rows) of links, e.g. "Wallpapers". */

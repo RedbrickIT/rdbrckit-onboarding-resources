@@ -1,7 +1,7 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
 
-import type { Media, ResourceSection as PayloadSection } from "@/payload-types";
+import type { ResourceSection as PayloadSection } from "@/payload-types";
 import type { ResourceGroup, ResourceLink, ResourceSection } from "./types";
 import { FALLBACK_SECTIONS } from "./fallback-content";
 
@@ -13,18 +13,11 @@ import { FALLBACK_SECTIONS } from "./fallback-content";
  * Server components only.
  */
 
-/** Deep enough to resolve the uploaded file on each link. */
-const POPULATE_DEPTH = 2;
-
 /**
- * A link's `file` is a Media document once populated, or a bare row id if it
- * wasn't. Only the populated form carries a URL worth rendering.
+ * Groups and links are nested arrays on the section itself, not relationships,
+ * so they come back whole and nothing needs populating.
  */
-function fileUrlOf(file: PayloadLink["file"]): string | null {
-  if (!file || typeof file === "number") return null;
-  const media = file as Media;
-  return media.url && media.url.trim() !== "" ? media.url : null;
-}
+const POPULATE_DEPTH = 0;
 
 type PayloadGroup = NonNullable<PayloadSection["groups"]>[number];
 type PayloadLink = NonNullable<PayloadGroup["links"]>[number];
@@ -34,7 +27,6 @@ function mapLink(link: PayloadLink, index: number): ResourceLink {
     id: link.id ?? `link-${index}`,
     label: link.label,
     url: link.url?.trim() ? link.url : null,
-    fileUrl: fileUrlOf(link.file),
   };
 }
 

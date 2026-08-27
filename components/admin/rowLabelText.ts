@@ -33,7 +33,6 @@ export function groupRowLabel(
 export type LinkRowData = {
   label?: string;
   url?: string;
-  file?: unknown;
 };
 
 export type LinkRowLabelParts = {
@@ -51,7 +50,7 @@ export function linkRowLabel(
   rowNumber?: number,
 ): LinkRowLabelParts {
   const label = data?.label?.trim();
-  const hasDestination = Boolean(data?.url?.trim() || data?.file);
+  const hasDestination = Boolean(data?.url?.trim());
 
   return {
     text: label || positionalFallback("Link", rowNumber),

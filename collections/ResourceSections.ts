@@ -119,20 +119,12 @@ export const ResourceSections: CollectionConfig = {
               admin: { description: "The button text." },
             },
             {
-              name: "file",
-              type: "upload",
-              relationTo: "media",
-              admin: {
-                description:
-                  "Upload to serve a download. Takes precedence over URL.",
-              },
-            },
-            {
               name: "url",
               type: "text",
               admin: {
                 description:
-                  "External link, opened in a new tab. Ignored when a file is attached.",
+                  "Where the button points. Opened in a new tab. A link with " +
+                  "no URL renders as an inert pill.",
               },
             },
           ],

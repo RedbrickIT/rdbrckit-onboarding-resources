@@ -68,7 +68,6 @@ export interface Config {
   blocks: {};
   collections: {
     'resource-sections': ResourceSection;
-    media: Media;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -78,7 +77,6 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     'resource-sections': ResourceSectionsSelect<false> | ResourceSectionsSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -153,11 +151,7 @@ export interface ResourceSection {
                */
               label: string;
               /**
-               * Upload to serve a download. Takes precedence over URL.
-               */
-              file?: (number | null) | Media;
-              /**
-               * External link, opened in a new tab. Ignored when a file is attached.
+               * Where the button points. Opened in a new tab. A link with no URL renders as an inert pill.
                */
               url?: string | null;
               id?: string | null;
@@ -168,28 +162,6 @@ export interface ResourceSection {
     | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  /**
-   * Describes the file for screen readers. Optional for downloads.
-   */
-  alt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -244,10 +216,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'resource-sections';
         value: number | ResourceSection;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
       } | null)
     | ({
         relationTo: 'users';
@@ -311,7 +279,6 @@ export interface ResourceSectionsSelect<T extends boolean = true> {
           | T
           | {
               label?: T;
-              file?: T;
               url?: T;
               id?: T;
             };
@@ -319,24 +286,6 @@ export interface ResourceSectionsSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
