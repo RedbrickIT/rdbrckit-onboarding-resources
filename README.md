@@ -136,13 +136,15 @@ until you give them one. In **Resource Sections**, each link takes either:
 Publishing repaints the page immediately — an `afterChange` hook calls
 `revalidatePath` directly. No webhook to configure.
 
-Two things worth a look while you're in there:
+Two deliberate details, in case they look like oversights:
 
-- **"Delivra" appears twice** under Account Icons. That's how it's drawn in the
-  Figma file (once per row), so I reproduced it rather than silently
-  second-guessing it. If it's a typo, delete one.
-- **"Submit a Ticket"** in the header is unlinked, matching the marketplace
-  site. Send me the helpdesk URL and I'll wire it up.
+- **The Figma design lists "Delivra" twice** under Account Icons, once per row.
+  That was a typo — the second one is **Duplex**, and the seed reflects that.
+  The design file itself still says Delivra.
+- **"Submit a Ticket"** in the header is intentionally unlinked, matching the
+  marketplace site. It renders as an inert pill. To wire it up, swap the
+  `<span>` for an `<a>` in [`components/Header.tsx`](components/Header.tsx) —
+  there are two, one for desktop and one for the mobile menu.
 
 ---
 

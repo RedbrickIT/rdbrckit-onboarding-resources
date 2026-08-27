@@ -55,15 +55,15 @@ export const FALLBACK_SECTIONS: ResourceSection[] = [
         id: "account-icons",
         label: "Account Icons",
         note: null,
-        // NB: "Delivra" appears twice in the Figma design (once in each row).
-        // Reproduced as drawn — see README if that turns out to be a typo.
+        // The Figma design lists "Delivra" twice, once in each row. Confirmed
+        // as a typo: the second one is Duplex.
         links: [
           { id: "ai-redbrick", label: "Redbrick", url: null, fileUrl: null },
           { id: "ai-animoto", label: "Animoto", url: null, fileUrl: null },
-          { id: "ai-delivra-1", label: "Delivra", url: null, fileUrl: null },
+          { id: "ai-delivra", label: "Delivra", url: null, fileUrl: null },
           { id: "ai-leadpages", label: "Leadpages", url: null, fileUrl: null },
           { id: "ai-shift", label: "Shift", url: null, fileUrl: null },
-          { id: "ai-delivra-2", label: "Delivra", url: null, fileUrl: null },
+          { id: "ai-duplex", label: "Duplex", url: null, fileUrl: null },
           { id: "ai-paved", label: "Paved", url: null, fileUrl: null },
         ],
       },

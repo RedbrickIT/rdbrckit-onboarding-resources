@@ -40,15 +40,15 @@ const SEED_SECTIONS = [
       },
       {
         label: "Account Icons",
-        // "Delivra" appears twice in the Figma design, once in each row.
-        // Seeded as drawn; delete the duplicate in the admin if it was a typo.
+        // The Figma design lists "Delivra" twice, once in each row. Confirmed
+        // as a typo: the second one is Duplex.
         links: [
           { label: "Redbrick" },
           { label: "Animoto" },
           { label: "Delivra" },
           { label: "Leadpages" },
           { label: "Shift" },
-          { label: "Delivra" },
+          { label: "Duplex" },
           { label: "Paved" },
         ],
       },
