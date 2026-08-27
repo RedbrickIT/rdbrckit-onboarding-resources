@@ -138,15 +138,22 @@ export default buildConfig({
         vercelBlobStorage({
           collections: { [Media.slug]: true },
           token: resolvedBlobToken,
-          // Upload straight from the browser to Blob instead of routing the
-          // bytes through a serverless function.
+          // Deliberately NOT using clientUploads.
           //
-          // Vercel caps a function's request body at 4.5MB. A desktop
-          // wallpaper clears that easily, and the admin surfaces the rejection
-          // as an unexplained "Something went wrong". Client uploads ask the
-          // server only for a short-lived token, so file size stops being a
-          // function concern.
-          clientUploads: true,
+          // Uploading straight from the browser would sidestep Vercel's 4.5MB
+          // request body cap, but this plugin implements only Blob's original
+          // client-token flow: it calls handleUpload/upload from @vercel/blob,
+          // never handleUploadPresigned. This store is the newer presigned
+          // generation — hence the BLOB_WEBHOOK_PUBLIC_KEY and BLOB_STORE_ID
+          // variables, which classic Blob never provisions — and it answers
+          // the browser's PUT to /?pathname=... with a 400. The SDK then
+          // retries with backoff, so the admin sits on "Submitting..." rather
+          // than reporting anything.
+          //
+          // Server-side uploads are unaffected: they go through put() with the
+          // read-write token. The cost is that a file has to fit inside the
+          // 4.5MB function body limit, so keep wallpapers compressed. Revisit
+          // if the plugin gains presigned support.
         }),
       ]
     : [],
