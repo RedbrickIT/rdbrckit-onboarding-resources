@@ -12,28 +12,28 @@ whole thing ships to Vercel on its own.
 
 ## Stack
 
-| Piece      | Version  | Notes                                                     |
-| ---------- | -------- | --------------------------------------------------------- |
-| Next.js    | 16.3.3   | App Router, Turbopack, React Server Components             |
-| React      | 19.2.8   |                                                            |
+| Piece      | Version  | Notes                                                                  |
+| ---------- | -------- | ---------------------------------------------------------------------- |
+| Next.js    | 16.3.3   | App Router, Turbopack, React Server Components                         |
+| React      | 19.2.8   |                                                                        |
 | TypeScript | 7.0.2    | The native (Go) compiler — see [Known constraints](#known-constraints) |
-| Payload    | 3.88.0   | Mounted into the App Router at `/admin`                    |
-| Database   | Postgres | Neon in production, a Docker container locally             |
+| Payload    | 3.88.0   | Mounted into the App Router at `/admin`                                |
+| Database   | Postgres | Neon in production, a Docker container locally                         |
 
 Styling is plain CSS Modules with design tokens in
-[`web/app/(frontend)/globals.css`](<web/app/(frontend)/globals.css>) — no
+[`app/(frontend)/globals.css`](<app/(frontend)/globals.css>) — no
 Tailwind, matching `rdbrckit-equipment-marketplace`.
 
 ## Layout
 
 ```
-web/
-├── app/(frontend)/     the public page
-├── app/(payload)/      the admin panel and Payload's API  (Payload owns these)
-├── collections/        the content model
-├── components/         UI — none of it is CMS-aware
-├── migrations/         database schema history
-└── payload.config.ts
+app/(frontend)/     the public page
+app/(payload)/      the admin panel and Payload's API  (Payload owns these)
+collections/        the content model
+components/         UI — none of it is CMS-aware
+lib/                CMS reads and shared types
+migrations/         database schema history
+payload.config.ts
 ```
 
 ## Run it locally
@@ -41,7 +41,6 @@ web/
 ```bash
 docker compose up -d
 
-cd web
 npm install
 cp .env.local.example .env.local   # then set PAYLOAD_SECRET
 npm run payload:migrate
@@ -99,7 +98,8 @@ PAYLOAD_SECRET=<openssl rand -base64 32>
 
 ### 4. Deploy
 
-Point Vercel at this repo with **root directory `web`**.
+Point Vercel at this repo. The app is at the repository root, so leave the
+root directory setting empty.
 
 Set the build command to run migrations first:
 
@@ -110,6 +110,18 @@ npm run payload:migrate && npm run build
 Payload refuses to push schema changes in production — that's deliberate, so a
 deploy can never silently alter the database. `migrations/` is the schema
 history, and the initial migration creates all twelve tables.
+
+> **If a deploy ever seems to skip migrations, this is why.** Running the app in
+> dev mode against a database writes a `dev` marker row (batch `-1`) into
+> `payload_migrations`, because dev mode pushes schema changes directly. On any
+> later `payload migrate`, Payload prompts before continuing — and with no TTY
+> the prompt resolves to its default of "no" and exits 0. The build then passes
+> having applied nothing. `npm run payload:migrate:status` shows the marker; a
+> production database only ever touched by migrations never gets one.
+>
+> `npm run payload:migrate:force` skips the prompt. Be deliberate about it: the
+> prompt exists because reconciling dev-pushed schema with migrations can drop
+> data.
 
 Then open `https://<your-site>/admin` and create the first admin user.
 
@@ -188,10 +200,10 @@ behave identically across both properties.
 `typescript-eslint` doesn't support it yet — it throws at import time on
 `major >= 7` ([typescript-eslint#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940)).
 Microsoft's documented workaround is running TypeScript 6 side by side, but
-that isn't expressible here: `typescript` is a *peerOptional* of
+that isn't expressible here: `typescript` is a _peerOptional_ of
 `eslint-config-next`, so npm always resolves it to the root copy.
 
-So [`web/eslint.config.mjs`](web/eslint.config.mjs) assembles the same plugin
+So [`eslint.config.mjs`](eslint.config.mjs) assembles the same plugin
 set `eslint-config-next` uses (Next.js, React, React Hooks, jsx-a11y) and parses
 with Next's own Babel-based parser, which reads TypeScript syntax without
 touching the TS compiler API. Everything except the type-aware lint rules still
@@ -212,17 +224,19 @@ Neon's pooled endpoint is the current path.
 
 ## Scripts
 
-All in `web/`:
+Run from the repository root:
 
-| Command                       | Does                                       |
-| ----------------------------- | ------------------------------------------ |
-| `npm run dev`                 | Dev server on :3000                        |
-| `npm run build`               | Production build (includes typecheck)      |
-| `npm run typecheck`           | `tsc --noEmit` with TypeScript 7           |
-| `npm run lint`                | ESLint                                     |
-| `npm run format`              | Prettier                                   |
-| `npm run seed`                | Populate an empty CMS from the design      |
-| `npm run payload:migrate`     | Apply pending migrations                   |
+| Command                          | Does                                      |
+| -------------------------------- | ----------------------------------------- |
+| `npm run dev`                    | Dev server on :3000                       |
+| `npm run build`                  | Production build (includes typecheck)     |
+| `npm run typecheck`              | `tsc --noEmit` with TypeScript 7          |
+| `npm run lint`                   | ESLint                                    |
+| `npm run format`                 | Prettier                                  |
+| `npm run seed`                   | Populate an empty CMS from the design     |
+| `npm run payload:migrate`        | Apply pending migrations                  |
+| `npm run payload:migrate:status` | List migrations and whether they ran      |
+| `npm run payload:migrate:force`  | Apply migrations, skipping the dev prompt |
 | `npm run payload:migrate:create` | Generate a migration after a model change |
-| `npm run payload:types`       | Regenerate `payload-types.ts`              |
-| `npm run payload:importmap`   | Regenerate the admin import map            |
+| `npm run payload:types`          | Regenerate `payload-types.ts`             |
+| `npm run payload:importmap`      | Regenerate the admin import map           |

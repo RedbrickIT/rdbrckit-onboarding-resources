@@ -1,5 +1,4 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-# Patterns are intentionally unanchored so they apply inside web/ too.
 
 # dependencies
 node_modules/
@@ -18,7 +17,7 @@ build/
 dist/
 
 # payload — locally uploaded media (production uses Vercel Blob)
-web/public/media/
+public/media/
 
 # misc
 .DS_Store
