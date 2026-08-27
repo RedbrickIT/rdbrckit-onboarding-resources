@@ -1,147 +1,154 @@
 /*
- * Section 1 of the design. In Figma the header floats over the top of this
- * section, so the frame is 620px tall with 80px of top padding reserved for
- * the bar. Here the header sits in normal flow instead, so the hero itself is
- * the remaining 540px — the rendered result is identical.
+ * Ported from rdbrckit-equipment-marketplace so both Redbrick properties share
+ * one hero implementation.
+ *
+ * The one adapted value is --hero-img-h: the marketplace runs a 620px image
+ * below an in-flow header, while this design floats the header over a 620px
+ * hero frame and reserves 80px of it for the bar — leaving 540px of image.
  */
 .hero {
+  /* Drives both the image height and its corner radius so the radius is
+     always exactly half the image height. */
+  --hero-img-h: 540px;
+
+  background: var(--green-200);
+  height: var(--hero-img-h);
   display: flex;
   align-items: center;
-  min-height: 540px;
-  background: var(--green-200);
-  padding-left: var(--page-gutter);
-  overflow: clip;
+  overflow: hidden;
 }
 
 .description {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
   gap: 32px;
-  width: 700px;
+  height: 100%;
+  justify-content: center;
+  /* 668px, not 700px: the image block is `flex: 1 0 0`, so trimming the text
+     column 32px hands those 32px to the image and closes the gap between the
+     two by the same amount. The title needs ~410px, so there's ample slack. */
+  width: 668px;
   flex: 0 0 auto;
+  /* Anchor the title block to the same left edge as the nav's Redbrick logo
+     (the centred 1440px container's left content edge). The image to the right
+     then bleeds to the screen's right edge. Without this the hero text drifts
+     left of the header and section headings on any viewport wider than
+     --content-max. */
+  margin-left: calc(
+    max(0px, (100vw - var(--content-max)) / 2) + var(--page-gutter)
+  );
 }
 
 .badgeRow {
   display: flex;
-  align-items: center;
   gap: 48px;
-  width: 100%;
+  align-items: stretch;
 }
 
-/* Figma draws this as a rotated 2px white Line stretched to the height of the
-   badge + heading stack. A stretched 2px block is the same thing without the
-   rotation gymnastics. */
+/* Vertical rule to the left of the badge/title block. */
 .rule {
-  align-self: stretch;
   width: 2px;
-  flex: 0 0 auto;
+  align-self: stretch;
   background: var(--neutral-0);
+  flex-shrink: 0;
 }
 
-.badgeStack {
+.badgeCol {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 16px;
-  flex: 1 1 0;
-  min-width: 0;
+  align-items: flex-start;
 }
 
 .badge {
   width: 64px;
   height: 64px;
-  flex: 0 0 auto;
 }
 
-.heading {
+.title {
   margin: 0;
   font-family: var(--font-serif), Georgia, "Times New Roman", serif;
   font-weight: 400;
   font-size: 64px;
-  line-height: 80px; /* Heading/H1 Serif */
+  line-height: 80px;
   color: var(--neutral-900);
-  overflow-wrap: break-word;
 }
 
-.heading span {
+.title span {
   display: block;
 }
 
-/* Second line of the headline is Neutral/0 against the green. */
-.headingAccent {
+.titleAccent {
   color: var(--neutral-0);
 }
 
 .wordmark {
-  width: 149px;
   height: 16px;
+  width: auto;
+  align-self: flex-start;
   flex: 0 0 auto;
 }
 
 .imageBlock {
-  position: relative;
-  flex: 1 1 0;
+  flex: 1 0 0;
   min-width: 0;
-  align-self: stretch;
-  border-top-left-radius: 256px;
-  overflow: hidden;
+  /* Explicit height is what keeps the image from sizing itself off its own
+     aspect ratio and stretching the whole hero on wide viewports. */
+  height: var(--hero-img-h);
 }
 
-.imageBlock img {
+.image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Always exactly half the image height. */
+  border-top-left-radius: calc(var(--hero-img-h) / 2);
 }
 
-/* ---- Responsive ------------------------------------------------------ */
-
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
   .description {
     width: auto;
-    flex: 1 1 0;
-    min-width: 0;
-    padding-right: 32px;
+    flex: 1 0 0;
   }
-
-  .heading {
+  .title {
     font-size: 48px;
     line-height: 60px;
-  }
-
-  .imageBlock {
-    border-top-left-radius: 160px;
   }
 }
 
 @media (max-width: 768px) {
   .hero {
+    /* Smaller image on mobile; radius stays half of this automatically. */
+    --hero-img-h: 280px;
+
     flex-direction: column;
+    height: auto;
+    /* Fill the space below the nav and anchor content to the bottom so the
+       image sits flush against the bottom of the hero. */
+    min-height: calc(100vh - var(--header-height));
+    min-height: calc(100svh - var(--header-height));
+    padding: 16px 0 0;
+    gap: 32px;
     align-items: stretch;
-    min-height: 0;
-    padding-left: 0;
+    justify-content: flex-end;
   }
-
   .description {
-    padding: 48px var(--page-gutter);
-    width: 100%;
-    flex: 0 0 auto;
+    width: auto;
+    margin-left: 0;
+    padding-inline: var(--page-gutter);
   }
-
+  /* Pull the badge + title 16px closer to the vertical rule (48px - 16px). */
   .badgeRow {
-    gap: 24px;
+    gap: 32px;
   }
-
-  .heading {
+  /* One step smaller than the marketplace needs here. Its headline is two
+     single words, so it can never wrap; "IT Onboarding" is two words and wraps
+     at 48px on a phone, turning the design's two-line headline into three. */
+  .title {
     font-size: 40px;
     line-height: 52px;
   }
-
   .imageBlock {
-    flex: 0 0 auto;
-    align-self: auto;
-    height: 280px;
-    border-top-left-radius: 96px;
+    width: 100%;
   }
 }
