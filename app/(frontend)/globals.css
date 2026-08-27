@@ -69,6 +69,15 @@ a {
 img {
   display: block;
   max-width: 100%;
+
+  /* Images aren't meant to be dragged out of the page or long-pressed into a
+     save sheet — it looks sloppy, and the downloads live behind the resource
+     buttons instead. Chromium and Safari honour these; Firefox needs the
+     dragstart guard in <ImageDragGuard>. None of this stops anyone determined
+     to save an image, and it isn't trying to. */
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 button,

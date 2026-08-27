@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, Figtree } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ImageDragGuard from "@/components/ImageDragGuard";
 import "./globals.css";
 
 // Heading serif — "DM Serif Display" in the Figma file (Heading/H1 Serif).
@@ -38,6 +39,7 @@ export default function RootLayout({
       className={`${dmSerifDisplay.variable} ${figtree.variable}`}
     >
       <body>
+        <ImageDragGuard />
         <Header />
         {children}
         <Footer />
