@@ -77,6 +77,11 @@ export const ResourceSections: CollectionConfig = {
         initCollapsed: true,
         description:
           "Each group renders as a small-caps label above a row of buttons.",
+        components: {
+          // Show the group's own label on the collapsed row instead of
+          // "Group 01", "Group 02".
+          RowLabel: "/components/admin/RowLabels#GroupRowLabel",
+        },
       },
       fields: [
         {
@@ -97,8 +102,15 @@ export const ResourceSections: CollectionConfig = {
         {
           name: "links",
           type: "array",
-          labels: { singular: "Link", plural: "Link" },
-          admin: { initCollapsed: true },
+          labels: { singular: "Link", plural: "Links" },
+          admin: {
+            initCollapsed: true,
+            components: {
+              // Show the button text on the collapsed row, plus a note when
+              // the link has no destination yet.
+              RowLabel: "/components/admin/RowLabels#LinkRowLabel",
+            },
+          },
           fields: [
             {
               name: "label",
