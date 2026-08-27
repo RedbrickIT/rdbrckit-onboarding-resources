@@ -43,7 +43,7 @@ docker compose up -d
 
 npm install
 cp .env.local.example .env.local   # then set PAYLOAD_SECRET
-npm run payload:migrate
+npm run payload:migrate:safe
 npm run seed
 npm run dev
 ```
@@ -104,24 +104,28 @@ root directory setting empty.
 Set the build command to run migrations first:
 
 ```bash
-npm run payload:migrate && npm run build
+npm run payload:migrate:safe && npm run build
 ```
 
 Payload refuses to push schema changes in production — that's deliberate, so a
 deploy can never silently alter the database. `migrations/` is the schema
 history, and the initial migration creates all twelve tables.
 
-> **If a deploy ever seems to skip migrations, this is why.** Running the app in
-> dev mode against a database writes a `dev` marker row (batch `-1`) into
-> `payload_migrations`, because dev mode pushes schema changes directly. On any
-> later `payload migrate`, Payload prompts before continuing — and with no TTY
-> the prompt resolves to its default of "no" and exits 0. The build then passes
-> having applied nothing. `npm run payload:migrate:status` shows the marker; a
-> production database only ever touched by migrations never gets one.
+> **Use `payload:migrate:safe`, not `payload migrate`, in CI.** Dev-mode schema
+> pushes leave a `dev` marker row (batch `-1`) in `payload_migrations`. Plain
+> `payload migrate` prompts for confirmation when it sees that row, and with no
+> TTY the prompt **never resolves** — the build hangs until the job times out.
+> `--forceAcceptWarning` does not help; the CLI only forwards that flag to
+> `migrate:create` and `migrate:fresh`, never to plain `migrate`.
 >
-> `npm run payload:migrate:force` skips the prompt. Be deliberate about it: the
-> prompt exists because reconciling dev-pushed schema with migrations can drop
-> data.
+> [`scripts/migrate.ts`](scripts/migrate.ts) decides without prompting. If the
+> marker is there but every migration has already been applied, the marker is
+> vestigial — it drops it and continues. If migrations are genuinely pending on
+> a dev-pushed schema, it exits non-zero and explains, rather than risking a
+> half-applied migration. It never exits 0 without having applied what was
+> pending, so a green build can't hide a skipped migration.
+>
+> `npm run payload:migrate:status` lists the rows if you want to look yourself.
 
 Then open `https://<your-site>/admin` and create the first admin user.
 
@@ -236,9 +240,8 @@ Run from the repository root:
 | `npm run lint`                   | ESLint                                    |
 | `npm run format`                 | Prettier                                  |
 | `npm run seed`                   | Populate an empty CMS from the design     |
-| `npm run payload:migrate`        | Apply pending migrations                  |
+| `npm run payload:migrate:safe`   | Apply pending migrations, never prompting |
 | `npm run payload:migrate:status` | List migrations and whether they ran      |
-| `npm run payload:migrate:force`  | Apply migrations, skipping the dev prompt |
 | `npm run payload:migrate:create` | Generate a migration after a model change |
 | `npm run payload:types`          | Regenerate `payload-types.ts`             |
 | `npm run payload:importmap`      | Regenerate the admin import map           |

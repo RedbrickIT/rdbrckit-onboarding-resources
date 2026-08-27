@@ -17,8 +17,8 @@
     "payload:types": "payload generate:types",
     "payload:importmap": "payload generate:importmap",
     "payload:migrate": "payload migrate",
+    "payload:migrate:safe": "PAYLOAD_MIGRATING=true payload run ./scripts/migrate.ts",
     "payload:migrate:status": "payload migrate:status",
-    "payload:migrate:force": "payload migrate --forceAcceptWarning",
     "payload:migrate:create": "payload migrate:create",
     "seed": "payload run ./scripts/seed.ts"
   },
