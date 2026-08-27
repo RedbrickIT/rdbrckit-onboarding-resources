@@ -2,6 +2,7 @@
   "name": "rdbrckit-onboarding-resources-web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Redbrick IT Onboarding Resources — Next.js front end backed by Strapi.",
   "scripts": {
     "dev": "next dev",
@@ -11,12 +12,25 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "payload": "payload",
+    "payload:types": "payload generate:types",
+    "payload:importmap": "payload generate:importmap",
+    "payload:migrate": "payload migrate",
+    "payload:migrate:create": "payload migrate:create",
+    "seed": "payload run ./scripts/seed.ts"
   },
   "dependencies": {
+    "@payloadcms/db-postgres": "^3.88.0",
+    "@payloadcms/next": "^3.88.0",
+    "@payloadcms/richtext-lexical": "^3.88.0",
+    "@payloadcms/storage-vercel-blob": "^3.88.0",
+    "graphql": "^16.14.2",
     "next": "16.3.3",
+    "payload": "^3.88.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^16.3.3",

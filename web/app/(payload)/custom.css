@@ -1,0 +1,9 @@
+/* Admin panel overrides. Pulls the Redbrick palette into Payload's own
+   theme tokens so the CMS doesn't look like a stock install. */
+:root {
+  --theme-elevation-1000: 33, 36, 46; /* Neutral/900 */
+}
+
+.template-default {
+  --theme-success-500: 174, 198, 175; /* Green/200 */
+}
