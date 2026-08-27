@@ -1,0 +1,30 @@
+# Local Postgres for development.
+#
+# Port 5434 rather than the default 5432, which is already taken by the
+# rustdesk-portal and sf-signature containers on this machine (5432 and 5433).
+# Change it here and in DATABASE_URI together if you need a different one.
+#
+#   docker compose up -d      start
+#   docker compose down       stop
+#   docker compose down -v    stop and delete the data
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: rdbrckit-onboarding-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: payload
+      POSTGRES_PASSWORD: payload
+      POSTGRES_DB: onboarding_resources
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payload -d onboarding_resources"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:

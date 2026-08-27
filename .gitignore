@@ -1,5 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-# Patterns are intentionally unanchored so they apply inside web/ and cms/ too.
+# Patterns are intentionally unanchored so they apply inside web/ too.
 
 # dependencies
 node_modules/
@@ -17,11 +17,8 @@ out/
 build/
 dist/
 
-# strapi
-.strapi/
-.cache/
-cms/public/uploads/*
-!cms/public/uploads/.gitkeep
+# payload — locally uploaded media (production uses Vercel Blob)
+web/public/media/
 
 # misc
 .DS_Store

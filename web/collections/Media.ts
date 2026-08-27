@@ -1,4 +1,9 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import type { CollectionConfig } from "payload";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Uploaded files — wallpapers, account icons, anything a resource button
@@ -19,6 +24,10 @@ export const Media: CollectionConfig = {
     group: "System",
   },
   upload: {
+    // Only used locally — in production the Vercel Blob plugin intercepts
+    // writes before they reach disk. Pinned explicitly so the local path
+    // doesn't depend on the process working directory.
+    staticDir: path.resolve(dirname, "../public/media"),
     mimeTypes: ["image/*", "application/pdf", "application/zip"],
   },
   fields: [
